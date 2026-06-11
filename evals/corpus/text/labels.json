@@ -1,0 +1,16 @@
+[
+  { "doc": "rfc9110", "passage": "The Hypertext Transfer Protocol (HTTP) is a stateless application-level protocol for distributed, collaborative, hypertext information systems." },
+  { "doc": "rfc9110", "passage": "This document describes the overall architecture of HTTP, establishes common terminology, and defines aspects of the protocol that are shared by all versions." },
+  { "doc": "scotus-opinion", "passage": "Where it is feasible, a syllabus (headnote) will be released, as is being done in connection with this case, at the time the opinion is issued." },
+  { "doc": "scotus-opinion", "passage": "The syllabus constitutes no part of the opinion of the Court but has been prepared by the Reporter of Decisions for the convenience of the reader." },
+  { "doc": "fed-minutes", "passage": "Federal Open Market Committee and the Board of Governors of the Federal Reserve System was held in the offices of the Board of Governors on Tuesday, January 30, 2024" },
+  { "doc": "berkshire-2023-letter", "passage": "Charlie Munger died on November 28, just 33 days before his 100th birthday." },
+  { "doc": "berkshire-2023-letter", "passage": "Charlie and his family did not have a dime invested in the small investing partnership that I was then managing and whose money I had used for the Berkshire purchase." },
+  { "doc": "bitcoin-whitepaper", "passage": "The network timestamps transactions by hashing them into an ongoing chain of hash-based proof-of-work, forming a record that cannot be changed without redoing the proof-of-work." },
+  { "doc": "bitcoin-whitepaper", "passage": "Digital signatures provide part of the solution, but the main benefits are lost if a trusted third party is still required to prevent double-spending." },
+  { "doc": "attention-is-all-you-need", "passage": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder." },
+  { "doc": "attention-is-all-you-need", "passage": "The best performing models also connect the encoder and decoder through an attention mechanism." },
+  { "doc": "gpt3-paper", "passage": "Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task." },
+  { "doc": "resnet", "passage": "We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously." },
+  { "doc": "resnet", "passage": "Deeper neural networks are more difficult to train." }
+]

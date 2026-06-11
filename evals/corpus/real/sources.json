@@ -1,0 +1,72 @@
+[
+  {
+    "id": "bitcoin-whitepaper",
+    "url": "https://bitcoin.org/bitcoin.pdf",
+    "note": "Single-column, footnotes, block diagrams. 9pp. A 'popular PDF'."
+  },
+  {
+    "id": "attention-is-all-you-need",
+    "url": "https://arxiv.org/pdf/1706.03762",
+    "note": "Two-column academic paper with tables + equations. The reading-order stress test."
+  },
+  {
+    "id": "resnet",
+    "url": "https://arxiv.org/pdf/1512.03385",
+    "note": "Two-column paper, dense tables and figure/chart axes."
+  },
+  {
+    "id": "irs-w9-form",
+    "url": "https://www.irs.gov/pub/irs-pdf/fw9.pdf",
+    "note": "Tax form: heavy boxes, form fields, instructions. A different failure mode from papers."
+  },
+  {
+    "id": "irs-1040-form",
+    "url": "https://www.irs.gov/pub/irs-pdf/f1040.pdf",
+    "note": "Tax return form: dense numbered line-items and box grids."
+  },
+  {
+    "id": "berkshire-2023-letter",
+    "url": "https://www.berkshirehathaway.com/letters/2023ltr.pdf",
+    "note": "Long single-column prose letter with financial tables. A 'popular PDF'."
+  },
+  {
+    "id": "irs-schedule-c",
+    "url": "https://www.irs.gov/pub/irs-pdf/f1040sc.pdf",
+    "note": "IRS Schedule C: dense numbered line-item / box tables."
+  },
+  {
+    "id": "irs-tax-table",
+    "url": "https://www.irs.gov/pub/irs-pdf/i1040tt.pdf",
+    "note": "IRS Tax Table booklet — pages of pure dense numeric tables. Table stress test."
+  },
+  {
+    "id": "gpt3-paper",
+    "url": "https://arxiv.org/pdf/2005.14165",
+    "note": "GPT-3 paper: 75pp, many large result tables. Two-column + tables."
+  },
+  {
+    "id": "rfc9110",
+    "url": "https://www.rfc-editor.org/rfc/rfc9110.pdf",
+    "note": "RFC spec: monospace-leaning technical layout, deep section nesting, field tables."
+  },
+  {
+    "id": "scotus-opinion",
+    "url": "https://www.supremecourt.gov/opinions/23pdf/22-451_7m58.pdf",
+    "note": "Supreme Court slip opinion: legal layout, dense footnotes, syllabus structure."
+  },
+  {
+    "id": "ne555-datasheet",
+    "url": "https://www.ti.com/lit/ds/symlink/ne555.pdf",
+    "note": "TI NE555 datasheet: dense spec/characteristics tables, pin diagrams, footers."
+  },
+  {
+    "id": "fed-minutes",
+    "url": "https://www.federalreserve.gov/monetarypolicy/files/fomcminutes20240131.pdf",
+    "note": "FOMC minutes: long government prose, wide margins."
+  },
+  {
+    "id": "cs231n-slides",
+    "url": "https://cs231n.stanford.edu/slides/2024/lecture_1_part_1.pdf",
+    "note": "Lecture slide deck: sparse text, big fonts, image-heavy, non-prose layout."
+  }
+]

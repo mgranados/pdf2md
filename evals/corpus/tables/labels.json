@@ -1,0 +1,124 @@
+[
+  {
+    "id": "berkshire-operating-earnings",
+    "doc": "berkshire-2023-letter",
+    "note": "Financial table with dot leaders, $ signs, parenthesised negatives. Verified vs pdftotext -layout.",
+    "grid": [
+      ["", "2023", "2022"],
+      ["Insurance-underwriting", "$ 5,428", "$ (30)"],
+      ["Insurance-investment income", "9,567", "6,484"],
+      ["Railroad", "5,087", "5,946"],
+      ["Utilities and energy", "2,331", "3,904"],
+      ["Other businesses and miscellaneous items", "14,937", "14,549"],
+      ["Operating earnings", "$37,350", "$30,853"]
+    ]
+  },
+  {
+    "id": "berkshire-per-share-slice",
+    "doc": "berkshire-2023-letter",
+    "note": "Slice of the 1965-2023 per-share performance table (dot-leader year rows). Verified vs pdftotext -layout.",
+    "grid": [
+      ["1965", "49.5", "10.0"],
+      ["1966", "(3.4)", "(11.7)"],
+      ["1967", "13.3", "30.9"],
+      ["1968", "77.8", "11.0"],
+      ["1969", "19.4", "(8.4)"]
+    ]
+  },
+  {
+    "id": "attention-table2-bleu",
+    "doc": "attention-is-all-you-need",
+    "note": "Table 2: BLEU + training cost; spanning column headers; sparse cells; superscript exponents appear as '10 19' in the text layer. Verified vs pdftotext -layout.",
+    "grid": [
+      ["Model", "EN-DE", "EN-FR", "EN-DE", "EN-FR"],
+      ["ByteNet [18]", "23.75", "", "", ""],
+      ["Deep-Att + PosUnk [39]", "", "39.2", "", "1.0 · 1020"],
+      ["GNMT + RL [38]", "24.6", "39.92", "2.3 · 1019", "1.4 · 1020"],
+      ["ConvS2S [9]", "25.16", "40.46", "9.6 · 1018", "1.5 · 1020"],
+      ["MoE [32]", "26.03", "40.56", "2.0 · 1019", "1.2 · 1020"],
+      ["Deep-Att + PosUnk Ensemble [39]", "", "40.4", "", "8.0 · 1020"],
+      ["GNMT + RL Ensemble [38]", "26.30", "41.16", "1.8 · 1020", "1.1 · 1021"],
+      ["ConvS2S Ensemble [9]", "26.36", "41.29", "7.7 · 1019", "1.2 · 1021"],
+      ["Transformer (base model)", "27.3", "38.1", "3.3 · 1018", ""],
+      ["Transformer (big)", "28.4", "41.8", "2.3 · 1019", ""]
+    ]
+  },
+  {
+    "id": "resnet-table4-single-model",
+    "doc": "resnet",
+    "note": "Table 4: single-model error rates. Clean 3-column metric table. Verified vs pdftotext -layout.",
+    "grid": [
+      ["method", "top-1 err.", "top-5 err."],
+      ["VGG [41] (ILSVRC’14)", "-", "8.43†"],
+      ["GoogLeNet [44] (ILSVRC’14)", "-", "7.89"],
+      ["VGG [41] (v5)", "24.4", "7.1"],
+      ["PReLU-net [13]", "21.59", "5.71"],
+      ["BN-inception [16]", "21.99", "5.81"],
+      ["ResNet-34 B", "21.84", "5.71"],
+      ["ResNet-34 C", "21.53", "5.60"],
+      ["ResNet-50", "20.74", "5.25"],
+      ["ResNet-101", "19.87", "4.60"],
+      ["ResNet-152", "19.38", "4.49"]
+    ]
+  },
+  {
+    "id": "gpt3-lambada-results",
+    "doc": "gpt3-paper",
+    "note": "Table 3.1: LAMBADA/StoryCloze/HellaSwag results; superscript reference letters on SOTA row. Data rows only. Verified vs pdftotext -layout.",
+    "grid": [
+      ["SOTA", "68.0a", "8.63b", "91.8c", "85.6d"],
+      ["GPT-3 Zero-Shot", "76.2", "3.00", "83.2", "78.9"],
+      ["GPT-3 One-Shot", "72.5", "3.35", "84.7", "78.1"],
+      ["GPT-3 Few-Shot", "86.4", "1.92", "87.7", "79.3"]
+    ]
+  },
+  {
+    "id": "attention-t1-complexity",
+    "doc": "attention-is-all-you-need",
+    "note": "Table 1: per-layer complexity; math expressions in cells (text layer renders O(n2 · d)). Data rows only. Verified vs pdftotext -layout.",
+    "grid": [
+      ["Self-Attention", "O(n2 · d)", "O(1)", "O(1)"],
+      ["Recurrent", "O(n · d2)", "O(n)", "O(n)"],
+      ["Convolutional", "O(k · n · d2)", "O(1)", "O(logk (n))"],
+      ["Self-Attention (restricted)", "O(r · n · d)", "O(1)", "O(n/r)"]
+    ]
+  },
+  {
+    "id": "schedule-c-expense-lines",
+    "doc": "irs-schedule-c",
+    "note": "Part II expense line items, left block lines 8-12: line number, label (one wraps two lines), entry-box number. Verified vs pdftotext -layout.",
+    "grid": [
+      ["8", "Advertising", "8"],
+      ["9", "Car and truck expenses (see instructions)", "9"],
+      ["10", "Commissions and fees", "10"],
+      ["11", "Contract labor (see instructions)", "11"],
+      ["12", "Depletion", "12"]
+    ]
+  },
+  {
+    "id": "ne555-abs-max-ratings",
+    "doc": "ne555-datasheet",
+    "note": "Datasheet Absolute Maximum Ratings: huge internal label-to-value whitespace; sparse MIN column. Verified vs pdftotext -layout. Tracks the one-table-vs-two-blocks ambiguity.",
+    "grid": [
+      ["", "", "", "", "MIN", "MAX", "UNIT"],
+      ["VCC", "Supply voltage(2)", "", "", "", "18", "V"],
+      ["VI", "Input voltage", "CONT, RESET, THRES, TRIG", "", "", "VCC", "V"],
+      ["IO", "Output current", "", "", "", "±225", "mA"],
+      ["TJ", "Operating virtual junction temperature", "", "", "", "150", "°C"],
+      ["", "Case temperature for 60 seconds", "FK package", "", "", "260", "°C"],
+      ["", "Lead temperature 1.6mm (1/16 inch) from case", "JG package, 60 seconds", "", "", "300", "°C"],
+      ["Tstg", "Storage temperature", "", "", "–65", "150", "°C"]
+    ]
+  },
+  {
+    "id": "tax-table-bracket-slice",
+    "doc": "irs-tax-table",
+    "note": "4-row slice of the 25,200-25,400 bracket block; 6 tight numeric columns. Verified vs pdftotext -layout.",
+    "grid": [
+      ["25,200", "25,250", "2,789", "2,550", "2,789", "2,687"],
+      ["25,250", "25,300", "2,795", "2,556", "2,795", "2,693"],
+      ["25,300", "25,350", "2,801", "2,562", "2,801", "2,699"],
+      ["25,350", "25,400", "2,807", "2,568", "2,807", "2,705"]
+    ]
+  }
+]

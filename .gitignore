@@ -1,0 +1,10 @@
+node_modules/
+evals/corpus/_out/
+evals/corpus/real/_pdfs/
+evals/.cache/
+evals/results/
+target/
+pdfium-lib/
+*.log
+.DS_Store
+evals/corpus/external/

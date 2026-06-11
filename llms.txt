@@ -1,0 +1,33 @@
+# pdf2md
+
+> Convert PDFs to clean structured Markdown in ~10 milliseconds, built for AI
+> agents and LLM applications. Reading a PDF as Markdown costs ~10× fewer
+> tokens than reading its pages as images, and preserves headings, lists,
+> tables, and multi-column reading order. Single native binary (Rust + pdfium):
+> no Python, no ML models, no network, no cost. MIT, always free. Ships as a
+> CLI, a Model Context Protocol (MCP) server (`pdf2md --mcp`, warm engine,
+> low-millisecond per document), and a Claude Code agent skill
+> (`scripts/install-skill.sh`).
+
+Born-digital PDFs only (reads the text layer; no OCR — use a vision model for
+scanned documents). Benchmarked and CI-gated against pymupdf4llm, markitdown,
+and pdftotext: first on judged quality, hand-labelled tables, noise, and text
+fidelity, and on external ground truth authored by the Tabula project.
+
+## Docs
+
+- [Agent guide](docs/agents.md): why agents should convert PDFs to Markdown,
+  quick start for the Claude Code skill / MCP server / CLI, speed and quality
+  comparisons, efficiency tips, FAQ.
+- [Benchmarks & methodology](docs/benchmarks.md): the five benchmark suites,
+  corpora, CI gates, and how to reproduce every number.
+- [README](README.md): install and basic usage.
+- [Skill definition](skills/pdf2md/SKILL.md): the agent-skill instructions.
+
+## Usage
+
+- CLI: `pdf2md file.pdf` prints Markdown to stdout; `pdf2md a.pdf b.pdf`
+  batches with one warm engine; `--stats` reports tokens saved.
+- MCP: `pdf2md --mcp` serves the `convert_pdf{path}` tool over stdio.
+- Skill: `scripts/install-skill.sh` installs a self-contained skill into
+  `~/.claude/skills/pdf2md/`.

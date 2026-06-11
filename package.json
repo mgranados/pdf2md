@@ -1,0 +1,29 @@
+{
+  "name": "pdf2md",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The fastest and most accurate PDF\u2192Markdown tool \u2014 always-free MIT OSS. (eval harness first; converter to follow)",
+  "license": "MIT",
+  "packageManager": "pnpm@11.3.0",
+  "engines": {
+    "node": ">=23.6",
+    "pnpm": ">=11"
+  },
+  "scripts": {
+    "corpus": "node evals/src/generate-corpus.ts",
+    "corpus:real": "node evals/src/fetch-real.ts",
+    "bench": "node evals/src/run.ts --bench-only",
+    "eval": "node evals/src/run.ts",
+    "eval:speed": "node evals/src/run.ts --bench-only",
+    "eval:quality": "node evals/src/run.ts --judge-only",
+    "eval:tables": "node evals/src/table-bench.ts",
+    "eval:noise": "node evals/src/noise-bench.ts",
+    "eval:text": "node evals/src/text-bench.ts",
+    "eval:tables-external": "node evals/src/external-tables.ts"
+  },
+  "dependencies": {
+    "pdfkit": "^0.15.0",
+    "pdfjs-dist": "^4.10.38"
+  }
+}

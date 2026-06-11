@@ -1,0 +1,50 @@
+[
+  {
+    "doc": "rfc9110",
+    "pattern": "Standards Track Page",
+    "maxAllowed": 1,
+    "note": "running footer 'Fielding, et al. Standards Track [Page N]' on all 194 pages"
+  },
+  {
+    "doc": "rfc9110",
+    "pattern": "Fielding, et al.",
+    "maxAllowed": 2,
+    "note": "footer attribution; legit once in authorship"
+  },
+  {
+    "doc": "scotus-opinion",
+    "pattern": "Opinion of the Court",
+    "maxAllowed": 3,
+    "note": "running recto header; 'opinion of the Court' (lowercase o) in prose is legit and not counted"
+  },
+  {
+    "doc": "ne555-datasheet",
+    "pattern": "Submit Document Feedback",
+    "maxAllowed": 1,
+    "note": "footer link on every page"
+  },
+  {
+    "doc": "ne555-datasheet",
+    "pattern": "Product Folder Links",
+    "maxAllowed": 1,
+    "note": "footer line on every page"
+  },
+  {
+    "doc": "ne555-datasheet",
+    "pattern": "Copyright ©",
+    "maxAllowed": 2,
+    "note": "footer copyright on every page"
+  },
+  {
+    "doc": "cs231n-slides",
+    "pattern": "Fei-Fei Li, Yunzhu Li, Ruohan Gao",
+    "maxAllowed": 2,
+    "note": "slide footer with authors; legit on the title slide"
+  },
+  {
+    "doc": "cs231n-slides",
+    "pattern": "April 4, 2024",
+    "maxAllowed": 2,
+    "note": "slide footer date on every slide"
+  }
+]

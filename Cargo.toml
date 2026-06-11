@@ -1,0 +1,24 @@
+[package]
+name = "pdf2md"
+version = "0.1.0"
+edition = "2021"
+description = "The fastest and most accurate PDF to Markdown tool, for agents. Always-free MIT."
+license = "MIT"
+
+[[bin]]
+name = "pdf2md"
+path = "src/main.rs"
+
+[dependencies]
+# default features disabled: `thread_safe` wraps EVERY FFI call in a mutex we
+# don't need (single-threaded), and `image` pulls a rendering stack we never
+# use. Both cost real time/size on a per-char FFI workload.
+pdfium-render = { version = "0.8", default-features = false, features = ["pdfium_latest"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
