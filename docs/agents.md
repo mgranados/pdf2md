@@ -88,8 +88,8 @@ Measured on a laptop, including process spawn (what an agent actually pays):
 | 75-page paper (GPT-3) | **~110 ms** | ~14,000 ms | ~2,000 ms | ~180 ms |
 | throughput (real corpus) | **~450 pages/s** | ~5 | ~13 | ~190 |
 
-Speed is a CI gate, not a claim: the build fails if the median exceeds 25 ms
-or throughput drops below 300 pages/s.
+Speed is an enforced gate, not a claim: the benchmark runner (`pnpm eval`)
+fails if the median exceeds 25 ms or throughput drops below 300 pages/s.
 
 ## How does pdf2md compare to pymupdf4llm, markitdown, and pdftotext?
 

@@ -27,8 +27,8 @@ pdfium). No Python, no ML models, no network, no accounts. MIT, free forever.
 
 ## Why this one?
 
-Every claim is benchmarked and CI-gated against `pymupdf4llm`, `markitdown`,
-and `pdftotext` — on judged quality, hand-labelled tables, noise, text
+Every claim is benchmarked and gated against `pymupdf4llm`, `markitdown`,
+and `pdftotext` (`pnpm eval` fails if pdf2md loses its lead) — on judged quality, hand-labelled tables, noise, text
 fidelity, and an external test set we didn't author:
 
 |  | pdf2md | next best |
@@ -62,4 +62,7 @@ Born-digital PDFs (anything with a text layer): papers, reports, forms,
 invoices, contracts, datasheets, legal opinions. It deliberately does not
 OCR — for scanned documents, use a vision model.
 
-MIT. Built on [pdfium](https://pdfium.googlesource.com/pdfium/), Google's PDF engine.
+MIT. Character decoding by [pdfium](https://pdfium.googlesource.com/pdfium/)
+(Google's PDF engine — the same foundation marker and docling build on); every
+layer above the raw glyphs — words, columns, reading order, tables, headings,
+noise stripping — is pdf2md's own.
