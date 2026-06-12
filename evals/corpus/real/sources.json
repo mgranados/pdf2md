@@ -37,7 +37,7 @@
   {
     "id": "irs-tax-table",
     "url": "https://www.irs.gov/pub/irs-pdf/i1040tt.pdf",
-    "note": "IRS Tax Table booklet — pages of pure dense numeric tables. Table stress test."
+    "note": "IRS Tax Table booklet \u2014 pages of pure dense numeric tables. Table stress test."
   },
   {
     "id": "gpt3-paper",
@@ -68,5 +68,35 @@
     "id": "cs231n-slides",
     "url": "https://cs231n.stanford.edu/slides/2024/lecture_1_part_1.pdf",
     "note": "Lecture slide deck: sparse text, big fonts, image-heavy, non-prose layout."
+  },
+  {
+    "id": "daily-tenancy-agreement",
+    "url": "https://assets.publishing.service.gov.uk/media/62b17a918fa8f53571e130a9/Model_agreement_for_a_shorthold_assured_tenancy.pdf",
+    "note": "DAY-TO-DAY SET (added 2026-06-12, scored out-of-the-box first): gov.uk model tenancy agreement \u2014 long legal contract, Word-export class."
+  },
+  {
+    "id": "daily-council-minutes",
+    "url": "https://democracy.reading.gov.uk/documents/g5482/Printed%20minutes%2028th-Jan-2025%2018.30%20Council.pdf?T=1",
+    "note": "DAY-TO-DAY SET: council meeting minutes (moderngov) \u2014 the classic Word-export municipal doc."
+  },
+  {
+    "id": "daily-resume-samples",
+    "url": "https://careered.stanford.edu/sites/g/files/sbiybj22801/files/media/file/resume-and-cover-letter-examples.pdf",
+    "note": "DAY-TO-DAY SET: Stanford resume/cover-letter examples \u2014 CV layouts (the class the Martin-CV bug came from)."
+  },
+  {
+    "id": "daily-utility-bill",
+    "url": "https://www.cenhud.com/globalassets/pdf/esco-portal/sample-bill.pdf",
+    "note": "DAY-TO-DAY SET: sample utility bill \u2014 boxed charges, account tables."
+  },
+  {
+    "id": "daily-invoice",
+    "url": "https://slicedinvoices.com/pdf/wordpress-pdf-invoice-plugin-sample.pdf",
+    "note": "DAY-TO-DAY SET: software-generated invoice (WordPress PDF plugin) \u2014 the auto-generated invoice class."
+  },
+  {
+    "id": "daily-bill-guide",
+    "url": "https://redwoodenergy.org/wp-content/uploads/sites/850/2024/12/Understanding-Your-Bill-Residential-E-1.pdf",
+    "note": "DAY-TO-DAY SET: designed 'understanding your bill' brochure \u2014 marketing/design-tool class."
   }
 ]
