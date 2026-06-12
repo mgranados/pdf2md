@@ -1,29 +1,65 @@
 # pdf2md
 
-Convert PDFs to clean Markdown in ~10 milliseconds. Free, MIT, no paid tier.
-
-Headings, lists, tables (including ruled grids), correct multi-column reading
-order — with page numbers, running headers/footers, and bibliographies
-stripped. One small native binary, no Python, no ML models, no network.
+Turn a PDF into clean Markdown in ~10 milliseconds.
 
 ```bash
 git clone https://github.com/mgranados/pdf2md && cd pdf2md
 scripts/fetch-pdfium.sh && cargo build --release
 
-./target/release/pdf2md report.pdf            # markdown to stdout
-./target/release/pdf2md a.pdf b.pdf --stats   # several files + token savings
-./target/release/pdf2md --mcp                 # serve as an MCP tool
+./target/release/pdf2md report.pdf
 ```
 
-**Using an AI agent (Claude Code, MCP clients, or any LLM tool)?**
-Read **[docs/agents.md](docs/agents.md)** — why converting PDFs to Markdown
-saves ~10× the tokens of reading pages as images, and how to wire pdf2md up
-as an agent skill, an MCP server, or a plain CLI. One-command skill install:
-`scripts/install-skill.sh`.
+```markdown
+# Plan Comparison
 
-**Is it actually good?** Every claim is benchmarked and CI-gated: fastest and
-most accurate against `pymupdf4llm`, `markitdown`, and `pdftotext` on judged
-quality, hand-labelled tables, noise, text fidelity — and on external ground
-truth we didn't author. Numbers and methodology: **[docs/benchmarks.md](docs/benchmarks.md)**.
+The plans differ in limits and price.
+
+| Plan | Seats | Storage | Price |
+| --- | --- | --- | --- |
+| Solo | 1 | 5 GB | $0 |
+| Team | 10 | 100 GB | $49 |
+```
+
+Headings, lists, real tables (even ruled grids), two-column papers in reading
+order — with page numbers, running headers, and bibliographies already
+stripped, and hyphenated line breaks healed. One small native binary (Rust +
+pdfium). No Python, no ML models, no network, no accounts. MIT, free forever.
+
+## Why this one?
+
+Every claim is benchmarked and CI-gated against `pymupdf4llm`, `markitdown`,
+and `pdftotext` — on judged quality, hand-labelled tables, noise, text
+fidelity, and an external test set we didn't author:
+
+|  | pdf2md | next best |
+|---|---|---|
+| typical document | **~9 ms** | ~90 ms (pdftotext) |
+| judged quality, real docs | **5.8 / 10** | 5.5 (pymupdf4llm) |
+| table reconstruction (content F1) | **0.94** | 0.14 (markitdown) |
+
+Numbers, methodology, and how to reproduce them: **[docs/benchmarks.md](docs/benchmarks.md)**.
+
+## 🤖 Using an AI agent? Start here
+
+pdf2md was built so agents never load a PDF into context — convert first,
+read the Markdown, spend ~10× fewer tokens than reading pages as images.
+**[docs/agents.md](docs/agents.md)** explains the benefits and setup for all
+three shapes:
+
+- **Claude Code skill** — `scripts/install-skill.sh` (one command; the agent
+  then reaches for it automatically whenever it meets a PDF)
+- **MCP server** — `pdf2md --mcp` works with any MCP client; warm engine,
+  low-millisecond conversions
+- **Plain CLI** — `pdf2md a.pdf b.pdf --stats` batches files and reports the
+  exact tokens saved
+
+There's also an [`llms.txt`](llms.txt) index if you *are* an agent reading
+this right now.
+
+## Scope
+
+Born-digital PDFs (anything with a text layer): papers, reports, forms,
+invoices, contracts, datasheets, legal opinions. It deliberately does not
+OCR — for scanned documents, use a vision model.
 
 MIT. Built on [pdfium](https://pdfium.googlesource.com/pdfium/), Google's PDF engine.
