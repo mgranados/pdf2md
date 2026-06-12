@@ -361,8 +361,20 @@ fn extract(pdfium: &Pdfium, path: &str) -> Result<Vec<(Vec<Tok>, Vec<Lattice>)>,
             // exact historical semantics (they never flush a token). Rotated
             // pages report size 0 for everything, so they skip this and use
             // the glyph-height fallback below.
+            //
+            // Exception: REAL whitespace still separates words at any size.
+            // Word/Google-Docs exporters emit space glyphs with size~1; if the
+            // degenerate-glyph guard swallows them, whole lines fuse into one
+            // token ("Backendengineerwith8+years..."). Whitespace is never
+            // literal text, so flushing here cannot inject junk — degenerate
+            // control/unmapped glyphs keep the silent no-flush drop.
             let raw_size = ch.scaled_font_size().value;
             if raw_size < 2.0 && !rotated {
+                if ch.unicode_char().is_some_and(|c| c.is_whitespace()) {
+                    if let Some(t) = cur.take() {
+                        toks.push(t);
+                    }
+                }
                 continue;
             }
             let c = ch.unicode_char().unwrap_or(' ');

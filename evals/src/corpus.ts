@@ -311,6 +311,49 @@ export const docs: CorpusDoc[] = [
       '',
     ].join('\n'),
   },
+  {
+    id: 'tiny-spaces',
+    description:
+      'Word/Google-Docs export pattern: space glyphs drawn at font size ~1 between normal-size words. A converter that drops degenerate glyphs before honouring whitespace fuses whole lines ("Backendengineerwith8+years…").',
+    pages: 1,
+    build(doc) {
+      h(doc, 1, 'Career Summary');
+      // pdfkit's .text() silently drops whitespace-only runs, so the export
+      // pattern is emitted as raw operators: each word as a size-11 Tj, each
+      // inter-word space as a REAL space glyph at size 1 (what Word/Google
+      // Docs exporters produce). The font registered by h() above serves the
+      // whole page.
+      const fid = doc._font.id;
+      // Per word: show it, kern an extra ~2.75pt of word gap (-250/1000 of
+      // 11pt — under the converter's 0.3×size gap-split threshold, so only
+      // the space GLYPH can separate these words), then the size-1 space.
+      const line = (text: string, x: number, y: number) =>
+        `BT /${fid} 11 Tf ${x} ${y} Td ` +
+        text
+          .split(' ')
+          .map((w, i, a) => `[(${w}) -250] TJ` + (i < a.length - 1 ? ` /${fid} 1 Tf ( ) Tj /${fid} 11 Tf` : ''))
+          .join(' ') +
+        ' ET\n';
+      const py = doc.page.height - doc.y;
+      // pdfkit's page CTM is a y-flip (top-left origin); wrap in a second
+      // flip so the raw operators run in standard bottom-up PDF coordinates.
+      doc.addContent(
+        `q 1 0 0 -1 0 ${doc.page.height} cm\n` +
+          line('Backend engineer with 8+ years of experience building', 56, py) +
+          line('reliable payment systems and internal tools.', 56, py - 13) +
+          line('Led the architecture of a platform that processed more than $3M in successful payments.', 56, py - 41) +
+          'Q\n',
+      );
+    },
+    groundTruth: [
+      '# Career Summary',
+      '',
+      'Backend engineer with 8+ years of experience building reliable payment systems and internal tools.',
+      '',
+      'Led the architecture of a platform that processed more than $3M in successful payments.',
+      '',
+    ].join('\n'),
+  },
 ];
 
 export async function renderPdf(build: (doc: any) => void): Promise<Buffer> {
