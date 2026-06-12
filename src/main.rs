@@ -1712,3 +1712,137 @@ fn main() {
         std::process::exit(1);
     }
 }
+
+// ---- unit tests ------------------------------------------------------------
+// The pure heuristics, pinned with the real-world cases that motivated them
+// (the corpus docs each constant was calibrated against are noted inline).
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn map_pt_rotations() {
+        // remap glyph geometry from unrotated page space into display space
+        assert_eq!(map_pt(PdfPageRenderRotation::None, 10.0, 20.0), (10.0, 20.0));
+        assert_eq!(map_pt(PdfPageRenderRotation::Degrees90, 10.0, 20.0), (20.0, -10.0));
+        assert_eq!(map_pt(PdfPageRenderRotation::Degrees180, 10.0, 20.0), (-10.0, -20.0));
+        assert_eq!(map_pt(PdfPageRenderRotation::Degrees270, 10.0, 20.0), (-20.0, 10.0));
+    }
+
+    #[test]
+    fn merge_segments_joins_collinear_touching_runs() {
+        // dashed ruling: three collinear pieces with <=6pt gaps become one
+        let merged = merge_segments(vec![(100.0, 0.0, 50.0), (101.0, 54.0, 90.0), (99.5, 95.0, 140.0)]);
+        assert_eq!(merged.len(), 1);
+        assert_eq!(merged[0].1, 0.0);
+        assert_eq!(merged[0].2, 140.0);
+    }
+
+    #[test]
+    fn merge_segments_keeps_separate_rules_apart() {
+        // parallel rulings 20pt apart (different table rows) must not merge
+        let merged = merge_segments(vec![(100.0, 0.0, 50.0), (120.0, 0.0, 50.0)]);
+        assert_eq!(merged.len(), 2);
+        // big in-line gap (>6pt) stays two segments: separate cells' underlines
+        let gapped = merge_segments(vec![(100.0, 0.0, 50.0), (100.0, 80.0, 140.0)]);
+        assert_eq!(gapped.len(), 2);
+    }
+
+    #[test]
+    fn qsize_quantizes_to_half_points() {
+        // CVPR body 9.9626 vs subsection 10.9589: 0.5pt quantization separates
+        // them (a naive `>= body + 1.0` missed by 0.004pt)
+        assert_eq!(qsize(9.9626), 20);
+        assert_eq!(qsize(10.9589), 22);
+        // nearly-equal sizes land in the SAME bucket (jitter tolerance)...
+        assert_eq!(qsize(9.9626), qsize(10.0413));
+        // ...while the real subsection size clears the +2-quanta heading bar
+        assert!(qsize(10.9589) >= qsize(9.9626) + 2);
+    }
+
+    #[test]
+    fn bullets_and_ordered_prefixes() {
+        assert!(is_bullet("• item"));
+        assert!(is_bullet("- item"));
+        assert!(!is_bullet("-item")); // hyphenated word, not a bullet
+        assert!(!is_bullet("plain"));
+        assert_eq!(strip_bullet("• item"), "item");
+        assert_eq!(ordered_prefix("3. foo"), Some(("3".to_string(), 3)));
+        assert_eq!(ordered_prefix("12) bar"), Some(("12".to_string(), 4)));
+        assert_eq!(ordered_prefix("3.14 is pi"), None); // decimal, not a list
+        assert_eq!(ordered_prefix("v2. release"), None);
+    }
+
+    #[test]
+    fn page_numbers() {
+        assert!(is_page_num("4"));
+        assert!(is_page_num("Page 12"));
+        assert!(!is_page_num("Chapter 4 begins"));
+        assert!(!is_page_num(""));
+    }
+
+    #[test]
+    fn letter_spacing_collapses_only_long_runs() {
+        // "I R S" tracked text (W-9 header) collapses...
+        assert_eq!(collapse_letter_spacing("F o r m W-9"), "Form W-9");
+        // ...but a genuine two-single-char sequence survives
+        assert_eq!(collapse_letter_spacing("a b testing"), "a b testing");
+    }
+
+    #[test]
+    fn decimals_rejoin() {
+        // berkshire-style torn decimals
+        assert_eq!(rejoin_decimals("grew 1 . 5 percent"), "grew 1.5 percent");
+        assert_eq!(rejoin_decimals("grew 1. 5 percent"), "grew 1.5 percent");
+        // sentence end before a numbered clause must NOT rejoin
+        assert_eq!(rejoin_decimals("see item 4. Then go"), "see item 4. Then go");
+    }
+
+    #[test]
+    fn dot_leaders_collapse() {
+        // ToC / NE555 datasheet leader runs become a single space
+        assert_eq!(clean("Contents . . . . . . . 7"), "Contents 7");
+        assert_eq!(clean("Overview........3"), "Overview 3");
+        // an ellipsis (3 dots) is prose, not a leader
+        assert_eq!(clean("wait..."), "wait...");
+    }
+
+    #[test]
+    fn furniture_normalization() {
+        // digit runs become one '#': "Page 3 of 12" repeats across pages
+        assert_eq!(norm_furniture("Page 3 of 12"), "Page # of #");
+        assert_eq!(norm_furniture("2026-06-12"), "#-#-#");
+        assert_eq!(norm_furniture("no digits"), "no digits");
+    }
+
+    #[test]
+    fn heading_text_rejects_equations() {
+        assert!(is_heading_text("4. Experiments"));
+        assert!(is_heading_text("Career Summary"));
+        // resnet equation junk promoted to headings before this guard
+        assert!(!is_heading_text("∑ wi xi ≥ 0"));
+        assert!(!is_heading_text("y = x^2 + {z}"));
+        assert!(!is_heading_text(""));
+    }
+
+    #[test]
+    fn repeat_period_folds_side_by_side_tables() {
+        // irs-tax-table: the same 4-column group repeated twice side by side
+        let header: Vec<String> =
+            ["At least", "But less than", "Single", "Married", "At least", "But less than", "Single", "Married"]
+                .iter().map(|s| s.to_string()).collect();
+        let matrix = vec![header];
+        assert_eq!(detect_repeat_period(&matrix, 8), Some(4));
+        // a non-repeating header must not fold
+        let plain: Vec<String> = ["Plan", "Seats", "Storage", "Price", "Region", "Tier", "Notes", "Owner"]
+            .iter().map(|s| s.to_string()).collect();
+        assert_eq!(detect_repeat_period(&[plain].to_vec(), 8), None);
+    }
+
+    #[test]
+    fn clean_composes_all_passes() {
+        assert_eq!(clean("\tF o r m   1040 . . . . . 2"), "Form 1040 2");
+        assert_eq!(clean("  spaced   out  "), "spaced out");
+    }
+}
