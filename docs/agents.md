@@ -94,13 +94,15 @@ fails if the median exceeds 25 ms or throughput drops below 300 pages/s.
 ## How does pdf2md compare to pymupdf4llm, markitdown, and pdftotext?
 
 All measured by the same harness, on the same documents (arXiv papers, IRS
-forms, an SEC-style letter, an RFC, a court opinion, a datasheet, slides) —
+forms, an SEC-style letter, an RFC, a court opinion, a datasheet, slides —
+plus a day-to-day set: a tenancy agreement, council minutes, resumes, a
+utility bill, an invoice, a brochure) —
 plus an external test set whose ground truth was authored by the Tabula
 project, not by us:
 
 | Benchmark | pdf2md | pymupdf4llm | markitdown | pdftotext |
 |---|---|---|---|---|
-| Judged quality, real docs (LLM judge, /10) | **5.8** | 5.4 | 5.0 | 4.8 |
+| Judged quality, 20 real docs (LLM judge, /10) | **5.8** | 5.7 | 5.2 | 4.9 |
 | Tables — hand-labelled grids (content F1) | **0.94** | 0.12 | 0.14 | 0.0 |
 | Tables — external Tabula ground truth | **0.58** | 0.47 | 0.14 | 0.0 |
 | Page-furniture leaks (lower = better) | **4** | 471 | 464 | 278 |

@@ -34,7 +34,7 @@ fidelity, and an external test set we didn't author:
 |  | pdf2md | next best |
 |---|---|---|
 | typical document | **~9 ms** | ~90 ms (pdftotext) |
-| judged quality, real docs | **5.8 / 10** | 5.5 (pymupdf4llm) |
+| judged quality, 20 real docs | **5.8 / 10** | 5.7 (pymupdf4llm) |
 | table reconstruction (content F1) | **0.94** | 0.14 (markitdown) |
 
 Numbers, methodology, and how to reproduce them: **[docs/benchmarks.md](docs/benchmarks.md)**.
