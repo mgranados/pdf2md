@@ -354,6 +354,80 @@ export const docs: CorpusDoc[] = [
       '',
     ].join('\n'),
   },
+  {
+    id: 'agenda',
+    description:
+      'Council-minutes/agenda layout: ordinal numbers at the left margin with the item title at a tab stop, prose between. Tab-stop alignment must NOT be read as a table.',
+    pages: 1,
+    build(doc) {
+      h(doc, 1, 'Council Minutes');
+      doc.font(BODY).fontSize(SIZE.body);
+      const labelRow = (a: string, b: string, ax = 56, bx = 130) => {
+        const y = doc.y;
+        doc.text(a, ax, y, { lineBreak: false });
+        doc.text(b, bx, y, { lineBreak: false });
+        doc.y = y + 16;
+      };
+      // consecutive tab-stop label rows — the shape that gets misread as a table
+      labelRow('Present:', 'Councillor Dennis (Mayor)');
+      labelRow('Apologies:', 'Councillors Goss');
+      labelRow('28.', "MAYOR'S ANNOUNCEMENTS", 56, 100);
+      labelRow('(a)', 'Former Councillor Ron Jewitt', 70, 100);
+      doc.x = 56;
+      doc.moveDown(0.5);
+      doc.text('The Mayor paid tribute to a former councillor and the council stood in silence.', { width: 480 });
+      doc.moveDown(0.9);
+      labelRow('29.', 'MINUTES', 56, 100);
+      labelRow('30.', 'PETITIONS', 56, 100);
+      doc.x = 56;
+      doc.moveDown(0.5);
+      doc.text('No petitions were received under standing order nine.', { width: 480 });
+    },
+    groundTruth: [
+      '# Council Minutes',
+      '',
+      'Present: Councillor Dennis (Mayor)',
+      '',
+      'Apologies: Councillors Goss',
+      '',
+      "28. MAYOR'S ANNOUNCEMENTS",
+      '',
+      '(a) Former Councillor Ron Jewitt',
+      '',
+      'The Mayor paid tribute to a former councillor and the council stood in silence.',
+      '',
+      '29. MINUTES',
+      '',
+      '30. PETITIONS',
+      '',
+      'No petitions were received under standing order nine.',
+      '',
+    ].join('\n'),
+  },
+  {
+    id: 'stamped',
+    description:
+      'A diagonal oversized "Paid" stamp overlaying normal prose (the invoice-watermark pattern). Rotated stamp glyphs must not leak into the text.',
+    pages: 1,
+    build(doc) {
+      h(doc, 1, 'Receipt');
+      para(doc, 'Thank you for your payment of $93.50 received on January 25.');
+      para(doc, 'Your subscription is active until the end of the billing period.');
+      doc.save();
+      doc.rotate(-45, { origin: [300, 400] });
+      doc.font(BOLD).fontSize(84).fillColor('#cccccc').text('Paid', 180, 360, { lineBreak: false });
+      doc.restore();
+      doc.fillColor('#000');
+    },
+    groundTruth: [
+      '# Receipt',
+      '',
+      'Thank you for your payment of $93.50 received on January 25.',
+      '',
+      'Your subscription is active until the end of the billing period.',
+      '',
+    ].join('\n'),
+  },
 ];
 
 export async function renderPdf(build: (doc: any) => void): Promise<Buffer> {

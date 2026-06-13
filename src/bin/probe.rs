@@ -27,15 +27,20 @@ fn main() {
             Err(_) => continue,
         };
         let (l, r, y) = (bb.left().value, bb.right().value, bb.bottom().value);
+        let h = bb.top().value - bb.bottom().value;
+        let (mb, mc) = ch.matrix().map(|m| (m.b(), m.c())).unwrap_or((0.0, 0.0));
         if count < n {
             let gap = if (y - prev_y).abs() < 1.0 { prev_right.map(|p| l - p) } else { None };
             println!(
-                "{:?} size={:.2} l={:.2} r={:.2} y={:.2} gap={}",
+                "{:?} size={:.2} l={:.2} r={:.2} y={:.2} h={:.2} mb={:.2} mc={:.2} gap={}",
                 c,
                 size,
                 l,
                 r,
                 y,
+                h,
+                mb,
+                mc,
                 gap.map(|g| format!("{g:.2}")).unwrap_or_else(|| "—".into())
             );
         }

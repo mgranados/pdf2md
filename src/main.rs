@@ -413,6 +413,25 @@ fn extract(pdfium: &Pdfium, path: &str) -> Result<Vec<(Vec<Tok>, Vec<Lattice>)>,
             } else {
                 continue;
             };
+            // Diagonal stamps/watermarks ("PAID" across an invoice) are
+            // rotated glyphs scattered over real content — they leak stray
+            // letters into the text AND skew the body-size statistics. Their
+            // loose bounds are far taller than the font size, so only such
+            // suspects pay the extra matrix() FFI call; anything rotated
+            // beyond ~11 degrees never reaches the text flow.
+            // (1.25: low enough to catch narrow rotated glyphs like 'i' whose
+            // axis-aligned box barely exceeds the font size; a false positive
+            // here only costs one matrix() call, never a dropped glyph)
+            if !rotated && h > size * 1.25 {
+                if let Ok(m) = ch.matrix() {
+                    // scale-independent rotation test: producers report the
+                    // matrix either normalized (b=sin θ) or scaled by font
+                    // size, so compare the skew term against the scale term
+                    if m.b().abs() > m.a().abs() * 0.2 {
+                        continue;
+                    }
+                }
+            }
             // break the current token on a wide gap or a line change
             if let Some(t) = cur.as_ref() {
                 if left - cur_right > t.size * 0.3 || (y - t.y).abs() > t.size * 0.6 {
@@ -899,6 +918,22 @@ fn is_heading_text(s: &str) -> bool {
     if s.chars().any(|c| "∑∫≤≥≈∞±×÷√{}^_".contains(c)) {
         return false;
     }
+    // data masquerading as headings (bills, invoices, statements): currency
+    // amounts, URLs, and trailing account-number digit runs are content the
+    // doc happens to set in a large face, not structure
+    if s.contains('$') || s.contains("www.") || s.contains(".com") {
+        return false;
+    }
+    let trailing_digits = s
+        .trim_end()
+        .chars()
+        .rev()
+        .take_while(|c| c.is_ascii_digit() || *c == '-' || *c == ' ')
+        .filter(|c| c.is_ascii_digit())
+        .count();
+    if trailing_digits >= 6 {
+        return false;
+    }
     let total = s.chars().filter(|c| !c.is_whitespace()).count();
     if total == 0 {
         return false;
@@ -1086,6 +1121,28 @@ fn is_aligned_table(rows: &[Line]) -> bool {
         }
     }
     clusters.iter().filter(|c| c.2.len() as f32 >= rows.len() as f32 * 0.6).count() >= 2
+}
+
+// Consecutive tab-stop label rows (council minutes, agendas: "30.  PETITIONS",
+// "Apologies:  Councillors Goss") cluster into two aligned columns and pass
+// the substance test, but they are prose, not data: an ordinal or "label:"
+// first cell introducing free text. Real two-column tables have data-shaped
+// first cells. These rows render as text lines, never as a table.
+fn is_label_layout(rows: &[Line]) -> bool {
+    let two: Vec<&Line> = rows.iter().filter(|r| r.cells.len() == 2).collect();
+    if (two.len() as f32) < rows.len() as f32 * 0.8 || two.is_empty() {
+        return false;
+    }
+    let labelish = two
+        .iter()
+        .filter(|r| {
+            let first = r.cells[0].trim();
+            let ordinal = ordered_prefix(&format!("{first} x")).is_some();
+            let lettered = first.len() <= 5 && first.starts_with('(') && first.ends_with(')');
+            ordinal || lettered || first.ends_with(':')
+        })
+        .count();
+    labelish as f32 / two.len() as f32 >= 0.8
 }
 
 fn has_table_substance(rows: &[Line]) -> bool {
@@ -1388,14 +1445,21 @@ fn classify(groups: &[Vec<Line>], body: f32, levels: &[(i32, usize)]) -> Vec<Str
                     // (forms): segment first, emit each table-worthy segment
                     // as its own table
                     let segments = segment_by_structure(owned);
-                    let worthy: Vec<bool> = segments
+                    // 0 = flow (rewind to prose), 1 = label rows (per-row text), 2 = table
+                    let kinds: Vec<u8> = segments
                         .iter()
-                        .map(|s| s.len() >= 2 && is_aligned_table(s) && has_table_substance(s))
+                        .map(|s| {
+                            if s.len() >= 2 && is_aligned_table(s) && has_table_substance(s) {
+                                if is_label_layout(s) { 1 } else { 2 }
+                            } else {
+                                0
+                            }
+                        })
                         .collect();
-                    if worthy.iter().any(|w| *w) {
+                    if kinds.iter().any(|k| *k > 0) {
                         flush_para(&mut para, &mut blocks);
-                        for (seg, w) in segments.iter().zip(worthy.iter()) {
-                            if *w {
+                        for (seg, k) in segments.iter().zip(kinds.iter()) {
+                            if *k == 2 {
                                 blocks.push(build_table(seg, 0));
                             } else {
                                 for r in seg {
@@ -1824,6 +1888,45 @@ mod tests {
         assert!(!is_heading_text("∑ wi xi ≥ 0"));
         assert!(!is_heading_text("y = x^2 + {z}"));
         assert!(!is_heading_text(""));
+    }
+
+    #[test]
+    fn heading_text_rejects_bill_data() {
+        // utility-bill lines set in a large face are data, not structure
+        assert!(!is_heading_text("Previous Billed Amount $87.82 $46.04"));
+        assert!(!is_heading_text("Customer Number: 000000000"));
+        assert!(!is_heading_text("Email and other options: CentralHudson.com/ContactUs"));
+        assert!(!is_heading_text("Account Number: 0000-0000-00-0"));
+        // headings with short numbers survive
+        assert!(is_heading_text("RFC 9110"));
+        assert!(is_heading_text("Section 4.2 Methods"));
+    }
+
+    #[test]
+    fn label_layout_detection() {
+        let mk = |cells: Vec<&str>| Line {
+            toks: vec![],
+            text: cells.join(" "),
+            cells: cells.iter().map(|s| s.to_string()).collect(),
+            cell_x: cells.iter().enumerate().map(|(i, _)| 56.0 + i as f32 * 60.0).collect(),
+            x: 56.0,
+            y: 0.0,
+            size: 11.0,
+        };
+        // agenda/minutes shape: ordinal + "label:" first cells -> prose
+        let agenda = vec![
+            mk(vec!["Present:", "Councillor Dennis (Mayor)"]),
+            mk(vec!["28.", "MAYOR'S ANNOUNCEMENTS"]),
+            mk(vec!["(a)", "Former Councillor Ron Jewitt"]),
+        ];
+        assert!(is_label_layout(&agenda));
+        // a real 2-column data table keeps its table reading
+        let data = vec![
+            mk(vec!["Solo", "$0"]),
+            mk(vec!["Team", "$49"]),
+            mk(vec!["Scale", "$199"]),
+        ];
+        assert!(!is_label_layout(&data));
     }
 
     #[test]
